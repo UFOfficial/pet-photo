@@ -30,7 +30,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 .upload-hint span{color:#7F77DD;font-weight:600}
 .preview-img{max-width:100%;max-height:220px;object-fit:contain;border-radius:12px;display:block;margin:0 auto}
 .re-upload{font-size:12px;color:#bbb;margin-top:8px;text-align:center}
-.styles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem}
+.styles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
 @media(max-width:400px){.styles-grid{grid-template-columns:repeat(2,1fr)}}
 .sc{border:2px solid #f0f0f0;border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;background:#fff;transition:border-color .15s,background .15s;user-select:none}
 .sc:hover{border-color:#AFA9EC;background:#f9f8ff}
@@ -38,6 +38,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 .sc .emo{font-size:26px;margin-bottom:6px}
 .sc .sn{font-size:13px;font-weight:600;color:#333;margin-bottom:3px}
 .sc .sd{font-size:11px;color:#aaa;line-height:1.4}
+.custom-prompt-wrap{margin-bottom:1.25rem}
+.custom-prompt-wrap textarea{width:100%;border:1.5px solid #e8e8e8;border-radius:12px;padding:10px 14px;font-size:13px;color:#333;background:#fafafa;resize:vertical;min-height:72px;font-family:inherit;line-height:1.6;transition:border-color .2s}
+.custom-prompt-wrap textarea:focus{outline:none;border-color:#7F77DD;background:#fff}
+.prompt-tip{font-size:12px;color:#bbb;margin-top:6px}
 .gen-btn{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#7F77DD,#534AB7);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s;margin-bottom:1.25rem}
 .gen-btn:hover:not(:disabled){opacity:.9}
 .gen-btn:active:not(:disabled){transform:scale(.98)}
@@ -71,18 +75,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 
   <div class="notice">
     <i class="ti ti-sparkles"></i>
-    使用阿里云通义万相风格重绘模型，识别并保留你家宠物特征，转换成各种有趣风格。
+    升级版！使用通义万相 2.1 图像编辑模型，支持自定义描述，效果更精准。
   </div>
 
   <div class="card">
-    <p class="lbl">API Keys 设置（自动保存，刷新不丢失）</p>
+    <p class="lbl">API Keys 设置（自动保存）</p>
     <p style="font-size:12px;font-weight:600;color:#666;margin-bottom:6px">阿里云百炼 API Key</p>
     <div class="key-row">
       <input type="password" id="aliKey" placeholder="sk-xxxxxxxx" oninput="saveKeys()"/>
       <button class="eye-btn" onclick="toggleKey('aliKey','aliEye')" aria-label="显示隐藏"><i class="ti ti-eye" id="aliEye"></i></button>
     </div>
     <p class="key-tip" style="margin-bottom:14px">获取：<a href="https://bailian.aliyun.com" target="_blank">bailian.aliyun.com</a> → 右上角头像 → API-KEY管理</p>
-
     <p style="font-size:12px;font-weight:600;color:#666;margin-bottom:6px">imgbb API Key（图片中转）</p>
     <div class="key-row">
       <input type="password" id="imgbbKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" oninput="saveKeys()"/>
@@ -107,6 +110,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
   <p class="lbl">选择转换风格</p>
   <div class="styles-grid" id="stylesGrid"></div>
 
+  <p class="lbl">风格描述（可修改）</p>
+  <div class="custom-prompt-wrap">
+    <textarea id="promptBox" placeholder="选择风格后这里会自动填入描述，你也可以自己修改或直接输入想要的效果"></textarea>
+    <p class="prompt-tip">💡 描述越具体，效果越好。比如加上"保留狗狗的棕色毛发"、"表情要可爱"等细节。</p>
+  </div>
+
   <button class="gen-btn" id="genBtn" onclick="generate()" disabled>请先上传照片并选择风格</button>
 
   <p class="lbl">生成结果</p>
@@ -120,13 +129,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 
 <script>
 const STYLES=[
-  {e:"🧑",n:"真人化",d:"宠物变成人类",idx:0},
-  {e:"🧌",n:"浪浪山妖怪",d:"山林小妖画风",idx:1},
-  {e:"🎨",n:"Q版漫画",d:"圆润可爱风格",idx:2},
-  {e:"🖋️",n:"水墨写意",d:"中式水墨画风",idx:3},
-  {e:"🌸",n:"吉卜力风",d:"宫崎骏温暖风",idx:4},
-  {e:"🎮",n:"像素风",d:"复古游戏风格",idx:5},
+  {e:"🧑",n:"真人化",d:"变成人类",p:"将图中的宠物转化为一个真实的人类角色，根据宠物的毛色和神态设计人物的发色、肤色和气质，高清写实摄影风格，保留宠物的眼神特征"},
+  {e:"🧌",n:"浪浪山妖怪",d:"山林小妖画风",p:"将图中的宠物转化为浪浪山风格的山林小妖怪角色，保留宠物的颜色特征和神态，日式手绘动画风格，温暖柔和色调，精灵感"},
+  {e:"🎨",n:"Q版漫画",d:"圆润可爱风格",p:"将图中的宠物转化为Q版卡通漫画角色，保留宠物的颜色和表情特征，大眼睛圆脑袋，日系可爱漫画风格，线条圆润，色彩鲜艳"},
+  {e:"🖋️",n:"水墨写意",d:"中式水墨画风",p:"将图中的宠物转化为中国传统水墨画风格，保留宠物的姿态和神韵，写意笔触，墨色浓淡有致，留白意境，古典雅致"},
+  {e:"🌸",n:"吉卜力风",d:"宫崎骏温暖风",p:"将图中的宠物转化为宫崎骏吉卜力工作室动画风格角色，保留宠物的颜色和神态，手绘质感，温暖柔和的色彩，充满生命力"},
+  {e:"🎮",n:"像素风",d:"复古游戏风格",p:"将图中的宠物转化为复古像素艺术风格，保留宠物的颜色特征，16位游戏角色风格，像素颗粒感清晰，色块鲜明可爱"},
 ];
+
 let sel=null,imgB64=null;
 
 window.onload=()=>{
@@ -153,7 +163,9 @@ STYLES.forEach((s,i)=>{
 function pick(i){
   document.querySelectorAll('.sc').forEach(c=>c.classList.remove('on'));
   document.getElementById('sc'+i).classList.add('on');
-  sel=i;updateBtn();
+  sel=i;
+  document.getElementById('promptBox').value=STYLES[i].p;
+  updateBtn();
 }
 
 function toggleKey(inputId,iconId){
@@ -187,18 +199,18 @@ function updateBtn(){
 async function generate(){
   const aliKey=document.getElementById('aliKey').value.trim();
   const imgbbKey=document.getElementById('imgbbKey').value.trim();
+  const prompt=document.getElementById('promptBox').value.trim();
   if(!aliKey){showErr('请填写阿里云百炼 API Key');return;}
   if(!imgbbKey){showErr('请填写 imgbb API Key');return;}
   if(!imgB64){showErr('请先上传照片');return;}
-  if(sel===null){showErr('请选择风格');return;}
+  if(!prompt){showErr('请选择风格或填写风格描述');return;}
 
   const btn=document.getElementById('genBtn');
   btn.disabled=true;btn.textContent='处理中…';
   const box=document.getElementById('resultBox');
-  const s=STYLES[sel];
+  const s=sel!==null?STYLES[sel]:{n:'自定义'};
 
   try{
-    // 第1步：上传图片
     box.innerHTML='<div class="dots"><span></span><span></span><span></span></div><div class="loading-txt">第 1 步：上传照片中…</div>';
     const uploadResp=await fetch('/api/upload',{
       method:'POST',
@@ -207,20 +219,17 @@ async function generate(){
     });
     const uploadData=await uploadResp.json();
     if(!uploadData.url)throw new Error(uploadData.error||'上传失败');
-    const imageUrl=uploadData.url;
 
-    // 第2步：提交生成任务
     box.innerHTML='<div class="dots"><span></span><span></span><span></span></div><div class="loading-txt">第 2 步：提交 AI 风格转换任务…</div>';
     const submitResp=await fetch('/api/generate',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({aliKey,imageUrl,styleIndex:s.idx})
+      body:JSON.stringify({aliKey,imageUrl:uploadData.url,prompt})
     });
     const submitData=await submitResp.json();
     if(!submitData.output||!submitData.output.task_id)throw new Error(submitData.message||submitData.error||JSON.stringify(submitData));
     const taskId=submitData.output.task_id;
 
-    // 第3步：轮询结果
     box.innerHTML='<div class="dots"><span></span><span></span><span></span></div><div class="loading-txt">第 3 步：AI 正在施魔法…<br><span style="font-size:11px;color:#ccc">通常需要 30-60 秒，请耐心等待</span></div>';
     let resultUrl=null;
     for(let i=0;i<40;i++){
