@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宠物魔法变变变 🐾</title>
+<link rel="stylesheet" href="index_files/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB',sans-serif;background:#F7F6F2;min-height:100vh;padding:2rem 1rem}
+.app{max-width:640px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2rem}
+.hdr .icon{font-size:48px;margin-bottom:10px}
+.hdr h1{font-size:24px;font-weight:600;color:#1a1a1a;margin-bottom:6px}
+.hdr p{font-size:14px;color:#888}
+.card{background:#fff;border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.lbl{font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.key-row{display:flex;gap:8px;align-items:center}
+.key-row input{flex:1;border:1.5px solid #e8e8e8;border-radius:10px;padding:10px 14px;font-size:13px;font-family:monospace;color:#333;background:#fafafa;transition:border-color .2s}
+.key-row input:focus{outline:none;border-color:#7F77DD;background:#fff}
+.eye-btn{background:none;border:none;cursor:pointer;color:#aaa;padding:6px;font-size:20px;display:flex;align-items:center;border-radius:8px;transition:color .2s}
+.eye-btn:hover{color:#7F77DD}
+.key-tip{font-size:12px;color:#bbb;margin-top:8px}
+.key-tip a{color:#7F77DD;text-decoration:none}
+.upload-zone{border:2px dashed #e0dff8;border-radius:14px;padding:2rem 1rem;text-align:center;cursor:pointer;background:#faf9ff;transition:border-color .2s,background .2s;margin-bottom:1.25rem;min-height:140px;display:flex;align-items:center;justify-content:center;position:relative}
+.upload-zone:hover{border-color:#AFA9EC;background:#f0effe}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-hint i{font-size:32px;color:#7F77DD;display:block;margin-bottom:10px}
+.upload-hint p{font-size:14px;color:#999;line-height:1.6}
+.upload-hint span{color:#7F77DD;font-weight:600}
+.preview-img{max-width:100%;max-height:220px;object-fit:contain;border-radius:12px;display:block;margin:0 auto}
+.re-upload{font-size:12px;color:#bbb;margin-top:8px;text-align:center}
+.styles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem}
+@media(max-width:400px){.styles-grid{grid-template-columns:repeat(2,1fr)}}
+.sc{border:2px solid #f0f0f0;border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;background:#fff;transition:border-color .15s,background .15s;user-select:none}
+.sc:hover{border-color:#AFA9EC;background:#f9f8ff}
+.sc.on{border-color:#7F77DD;background:#f0effe}
+.sc .emo{font-size:26px;margin-bottom:6px}
+.sc .sn{font-size:13px;font-weight:600;color:#333;margin-bottom:3px}
+.sc .sd{font-size:11px;color:#aaa;line-height:1.4}
+.gen-btn{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#7F77DD,#534AB7);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s;margin-bottom:1.25rem;letter-spacing:.02em}
+.gen-btn:hover:not(:disabled){opacity:.9}
+.gen-btn:active:not(:disabled){transform:scale(.98)}
+.gen-btn:disabled{background:#e0e0e0;color:#bbb;cursor:not-allowed}
+.result-box{background:#fff;border-radius:16px;padding:1.25rem;text-align:center;min-height:160px;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.placeholder{color:#ccc;font-size:14px}
+.placeholder i{font-size:32px;display:block;margin-bottom:8px}
+.dots{display:flex;gap:7px;justify-content:center;margin-bottom:10px}
+.dots span{width:8px;height:8px;border-radius:50%;background:#7F77DD;animation:bop 1.2s infinite ease-in-out}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes bop{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+.loading-txt{font-size:13px;color:#999;line-height:1.8}
+.err-box{font-size:13px;color:#c0392b;background:#fff5f5;padding:10px 14px;border-radius:10px;text-align:left;margin-top:10px;line-height:1.7;width:100%;border:1px solid #ffd5d5}
+.result-inner{width:100%}
+.result-label{font-size:14px;font-weight:600;color:#333;margin-bottom:12px}
+.result-img{max-width:100%;max-height:340px;border-radius:12px;display:block;margin:0 auto}
+.action-row{display:flex;gap:8px;margin-top:14px;justify-content:center;flex-wrap:wrap}
+.sm-btn{padding:9px 18px;border:1.5px solid #e8e8e8;border-radius:10px;background:#fff;font-size:13px;cursor:pointer;color:#555;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:background .2s,border-color .2s}
+.sm-btn:hover{background:#f5f5f5;border-color:#ccc}
+.notice{background:#f0effe;border-radius:12px;padding:10px 14px;font-size:12px;color:#534AB7;margin-bottom:1.25rem;line-height:1.7}
+.notice i{margin-right:4px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hdr">
+    <div class="icon">🐾</div>
+    <h1>宠物魔法变变变</h1>
+    <p>上传宠物照片，AI 保留样貌，一键转换有趣风格</p>
+  </div>
+
+  <div class="notice">
+    <i class="ti ti-sparkles"></i>
+    使用阿里云通义万相图像编辑模型，能识别并保留你家宠物的样貌特征，再进行风格转换。
+  </div>
+
+  <div class="card">
+    <p class="lbl">第一步 · 填写 API Key</p>
+    <div class="key-row">
+      <input type="password" id="apiKey" placeholder="粘贴你的阿里云百炼 sk-xxxxxxxx">
+      <button class="eye-btn" onclick="toggleKey()" aria-label="显示或隐藏密钥">
+        <i class="ti ti-eye" id="eyeIcon"></i>
+      </button>
+    </div>
+    <p class="key-tip">在 <a href="https://bailian.aliyun.com/" target="_blank">bailian.aliyun.com</a> → 右上角头像 → API-KEY管理 获取</p>
+  </div>
+
+  <p class="lbl">第二步 · 上传宠物照片</p>
+  <div class="upload-zone" id="uploadZone">
+    <input type="file" accept="image/jpeg,image/png,image/webp" id="fileInput" onchange="handleFile(event)">
+    <div class="upload-hint" id="hint">
+      <i class="ti ti-cloud-upload"></i>
+      <p>点击选择照片 或 拖拽到这里<br><span>JPG / PNG / WEBP</span>，建议清晰正面照效果最佳</p>
+    </div>
+    <div id="previewWrap" style="display:none;width:100%">
+      <img id="previewImg" class="preview-img" src="" alt="预览">
+      <p class="re-upload">点击可重新选择照片</p>
+    </div>
+  </div>
+
+  <p class="lbl">第三步 · 选择转换风格</p>
+  <div class="styles-grid" id="stylesGrid"><div class="sc" id="sc0"><div class="emo">🧑</div><div class="sn">真人化</div><div class="sd">宠物变成人类</div></div><div class="sc" id="sc1"><div class="emo">🧌</div><div class="sn">浪浪山妖怪</div><div class="sd">山林小妖画风</div></div><div class="sc" id="sc2"><div class="emo">🎨</div><div class="sn">Q版漫画</div><div class="sd">圆润可爱风格</div></div><div class="sc" id="sc3"><div class="emo">🖋️</div><div class="sn">水墨写意</div><div class="sd">中式水墨画风</div></div><div class="sc" id="sc4"><div class="emo">🌸</div><div class="sn">吉卜力风</div><div class="sd">宫崎骏温暖风</div></div><div class="sc" id="sc5"><div class="emo">🎮</div><div class="sn">像素风</div><div class="sd">复古游戏风格</div></div></div>
+
+  <button class="gen-btn" id="genBtn" onclick="generate()">请先上传照片并选择风格</button>
+
+  <p class="lbl">生成结果</p>
+  <div class="result-box" id="resultBox">
+    <div class="placeholder">
+      <i class="ti ti-photo"></i>
+      生成的图像将在这里显示
+    </div>
+  </div>
+</div>
+
+<script>
+const STYLES=[
+  {e:"🧑",n:"真人化",d:"宠物变成人类",p:"将图中的宠物转化为写实风格的人类，保留宠物原有的颜色特征和性格神态，高清写实摄影风格"},
+  {e:"🧌",n:"浪浪山妖怪",d:"山林小妖画风",p:"将图中的宠物转化为浪浪山风格的山林小妖怪，保留其颜色和神态特征，日式动画风格，温暖色调"},
+  {e:"🎨",n:"Q版漫画",d:"圆润可爱风格",p:"将图中的宠物转化为Q版卡通漫画角色，保留其颜色和表情特征，大眼睛，圆润可爱的日系漫画风格"},
+  {e:"🖋️",n:"水墨写意",d:"中式水墨画风",p:"将图中的宠物转化为中国传统水墨画风格，保留其姿态特征，写意笔触，黑白水墨，意境悠远"},
+  {e:"🌸",n:"吉卜力风",d:"宫崎骏温暖风",p:"将图中的宠物转化为宫崎骏吉卜力工作室动画风格，保留其颜色和神态，手绘感，温暖色彩"},
+  {e:"🎮",n:"像素风",d:"复古游戏风格",p:"将图中的宠物转化为复古像素艺术风格，保留其颜色特征，16位游戏角色风格，可爱像素图"},
+];
+
+let sel=null,imgB64=null,imgMime=null;
+
+const grid=document.getElementById('stylesGrid');
+STYLES.forEach((s,i)=>{
+  const c=document.createElement('div');
+  c.className='sc';c.id='sc'+i;
+  c.innerHTML=`<div class="emo">${s.e}</div><div class="sn">${s.n}</div><div class="sd">${s.d}</div>`;
+  c.onclick=()=>pick(i);
+  grid.appendChild(c);
+});
+
+function pick(i){
+  document.querySelectorAll('.sc').forEach(c=>c.classList.remove('on'));
+  document.getElementById('sc'+i).classList.add('on');
+  sel=i;updateBtn();
+}
+
+function toggleKey(){
+  const inp=document.getElementById('apiKey');
+  const ico=document.getElementById('eyeIcon');
+  inp.type=inp.type==='password'?'text':'password';
+  ico.className=inp.type==='password'?'ti ti-eye':'ti ti-eye-off';
+}
+
+function handleFile(e){
+  const f=e.target.files[0];if(!f)return;
+  imgMime=f.type||'image/jpeg';
+  const r=new FileReader();
+  r.onload=ev=>{
+    imgB64=ev.target.result.split(',')[1];
+    document.getElementById('previewImg').src=ev.target.result;
+    document.getElementById('hint').style.display='none';
+    document.getElementById('previewWrap').style.display='block';
+    updateBtn();
+  };
+  r.readAsDataURL(f);
+}
+
+function updateBtn(){
+  const btn=document.getElementById('genBtn');
+  if(imgB64&&sel!==null){
+    btn.disabled=false;
+    btn.textContent='✨ 用「'+STYLES[sel].n+'」风格生成图像';
+  }
+}
+
+document.getElementById('apiKey').addEventListener('input',updateBtn);
+
+async function generate(){
+  const key=document.getElementById('apiKey').value.trim();
+  if(!key){showErr('请先填写 API Key');return;}
+  if(!imgB64){showErr('请先上传照片');return;}
+  if(sel===null){showErr('请选择一个风格');return;}
+  const btn=document.getElementById('genBtn');
+  btn.disabled=true;btn.textContent='生成中，请稍候…';
+  const box=document.getElementById('resultBox');
+  box.innerHTML='<div class="dots"><span></span><span></span><span></span></div><div class="loading-txt">AI 正在分析宠物特征并转换风格<br>通常需要 30-60 秒，请耐心等待…</div>';
+  const s=STYLES[sel];
+  try{
+    const submitResp=await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'X-DashScope-Async':'enable'},
+      body:JSON.stringify({
+        model:'wanx-style-repaint-v1',
+        input:{function:'stylization_all',prompt:s.p,image_url:'data:'+imgMime+';base64,'+imgB64},
+        parameters:{style_index:0,n:1}
+      })
+    });
+    const submitData=await submitResp.json();
+    if(!submitResp.ok||!submitData.output||!submitData.output.task_id){
+      showErr('提交失败：'+(submitData.message||submitData.code||JSON.stringify(submitData)));resetBtn();return;
+    }
+    const taskId=submitData.output.task_id;
+    box.innerHTML='<div class="dots"><span></span><span></span><span></span></div><div class="loading-txt">任务已提交，正在等待结果…<br><span style="font-size:11px;color:#ccc">任务 ID: '+taskId+'</span></div>';
+    let resultUrl=null;
+    for(let i=0;i<30;i++){
+      await new Promise(r=>setTimeout(r,3000));
+      const poll=await fetch('https://dashscope.aliyuncs.com/api/v1/tasks/'+taskId,{headers:{'Authorization':'Bearer '+key}});
+      const pd=await poll.json();
+      const st=pd.output&&pd.output.task_status;
+      if(st==='SUCCEEDED'){resultUrl=pd.output.results&&pd.output.results[0]&&pd.output.results[0].url;break;}
+      if(st==='FAILED'){showErr('生成失败：'+(pd.output.message||pd.message||'未知错误'));resetBtn();return;}
+    }
+    if(!resultUrl){showErr('生成超时，请重试');resetBtn();return;}
+    box.innerHTML=`<div class="result-inner">
+      <p class="result-label">🎉 生成完成！风格：${s.n}</p>
+      <img src="${resultUrl}" class="result-img" alt="AI生成的${s.n}风格图片"/>
+      <div class="action-row">
+        <a href="${resultUrl}" target="_blank" class="sm-btn"><i class="ti ti-external-link"></i>查看原图</a>
+        <button class="sm-btn" onclick="generate()"><i class="ti ti-refresh"></i>再生成一次</button>
+      </div>
+    </div>`;
+    btn.disabled=false;btn.textContent='✨ 用「'+s.n+'」风格生成图像';
+  }catch(err){
+    showErr('网络错误：'+err.message);resetBtn();
+  }
+}
+
+function showErr(msg){
+  document.getElementById('resultBox').innerHTML='<div style="width:100%"><i class="ti ti-alert-circle" style="font-size:28px;color:#e74c3c;display:block;margin-bottom:8px"></i><div class="err-box">'+msg+'</div></div>';
+}
+function resetBtn(){
+  const btn=document.getElementById('genBtn');
+  btn.disabled=false;
+  btn.textContent=sel!==null?'✨ 用「'+STYLES[sel].n+'」风格生成图像':'请先上传照片并选择风格';
+}
+</script>
+
+
+</body></html>
