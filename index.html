@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>宠物魔法变变变 🐾</title>
-<link rel="stylesheet" href="index_files/tabler-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB',sans-serif;background:#F7F6F2;min-height:100vh;padding:2rem 1rem}
@@ -18,7 +18,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 .key-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .key-row input{flex:1;border:1.5px solid #e8e8e8;border-radius:10px;padding:10px 14px;font-size:13px;font-family:monospace;color:#333;background:#fafafa;transition:border-color .2s}
 .key-row input:focus{outline:none;border-color:#7F77DD;background:#fff}
-.eye-btn{background:none;border:none;cursor:pointer;color:#aaa;padding:6px;font-size:20px;display:flex;align-items:center;border-radius:8px;transition:color .2s}
+.eye-btn{background:none;border:none;cursor:pointer;color:#aaa;padding:6px;font-size:20px;display:flex;align-items:center;border-radius:8px}
 .eye-btn:hover{color:#7F77DD}
 .key-tip{font-size:12px;color:#bbb;line-height:1.6;margin-bottom:4px}
 .key-tip a{color:#7F77DD;text-decoration:none}
@@ -38,7 +38,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 .sc .emo{font-size:26px;margin-bottom:6px}
 .sc .sn{font-size:13px;font-weight:600;color:#333;margin-bottom:3px}
 .sc .sd{font-size:11px;color:#aaa;line-height:1.4}
-.gen-btn{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#7F77DD,#534AB7);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s;margin-bottom:1.25rem;letter-spacing:.02em}
+.gen-btn{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#7F77DD,#534AB7);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s;margin-bottom:1.25rem}
 .gen-btn:hover:not(:disabled){opacity:.9}
 .gen-btn:active:not(:disabled){transform:scale(.98)}
 .gen-btn:disabled{background:#e0e0e0;color:#bbb;cursor:not-allowed}
@@ -56,8 +56,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 .result-label{font-size:14px;font-weight:600;color:#333;margin-bottom:12px}
 .result-img{max-width:100%;max-height:340px;border-radius:12px;display:block;margin:0 auto;opacity:0;transition:opacity .4s}
 .action-row{display:flex;gap:8px;margin-top:14px;justify-content:center;flex-wrap:wrap}
-.sm-btn{padding:9px 18px;border:1.5px solid #e8e8e8;border-radius:10px;background:#fff;font-size:13px;cursor:pointer;color:#555;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:background .2s,border-color .2s}
-.sm-btn:hover{background:#f5f5f5;border-color:#ccc}
+.sm-btn{padding:9px 18px;border:1.5px solid #e8e8e8;border-radius:10px;background:#fff;font-size:13px;cursor:pointer;color:#555;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:background .2s}
+.sm-btn:hover{background:#f5f5f5}
 .notice{background:#f0effe;border-radius:12px;padding:10px 14px;font-size:12px;color:#534AB7;margin-bottom:1.25rem;line-height:1.7}
 </style>
 </head>
@@ -76,39 +76,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 
   <div class="card">
     <p class="lbl">API Keys 设置（自动保存，刷新不丢失）</p>
-
     <p style="font-size:12px;font-weight:600;color:#666;margin-bottom:6px">阿里云百炼 API Key</p>
     <div class="key-row">
-      <input type="password" id="aliKey" placeholder="sk-xxxxxxxx" oninput="saveKeys()">
-      <button class="eye-btn" onclick="toggleKey('aliKey','aliEye')" aria-label="显示隐藏密钥"><i class="ti ti-eye" id="aliEye"></i></button>
+      <input type="password" id="aliKey" placeholder="sk-xxxxxxxx" oninput="saveKeys()"/>
+      <button class="eye-btn" onclick="toggleKey('aliKey','aliEye')" aria-label="显示隐藏"><i class="ti ti-eye" id="aliEye"></i></button>
     </div>
-    <p class="key-tip" style="margin-bottom:14px">获取：<a href="https://bailian.aliyun.com/" target="_blank">bailian.aliyun.com</a> → 右上角头像 → API-KEY管理</p>
+    <p class="key-tip" style="margin-bottom:14px">获取：<a href="https://bailian.aliyun.com" target="_blank">bailian.aliyun.com</a> → 右上角头像 → API-KEY管理</p>
 
-    <p style="font-size:12px;font-weight:600;color:#666;margin-bottom:6px">imgbb API Key（图片中转，免费）</p>
+    <p style="font-size:12px;font-weight:600;color:#666;margin-bottom:6px">imgbb API Key（图片中转）</p>
     <div class="key-row">
-      <input type="password" id="imgbbKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" oninput="saveKeys()">
-      <button class="eye-btn" onclick="toggleKey('imgbbKey','imgbbEye')" aria-label="显示隐藏密钥"><i class="ti ti-eye" id="imgbbEye"></i></button>
+      <input type="password" id="imgbbKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" oninput="saveKeys()"/>
+      <button class="eye-btn" onclick="toggleKey('imgbbKey','imgbbEye')" aria-label="显示隐藏"><i class="ti ti-eye" id="imgbbEye"></i></button>
     </div>
-    <p class="key-tip">获取：<a href="https://api.imgbb.com/" target="_blank">api.imgbb.com</a> → 注册登录后页面上直接显示</p>
+    <p class="key-tip">获取：<a href="https://api.imgbb.com" target="_blank">api.imgbb.com</a> → 注册登录后页面上直接显示</p>
   </div>
 
   <p class="lbl">上传宠物照片</p>
   <div class="upload-zone">
-    <input type="file" accept="image/jpeg,image/png,image/webp" id="fileInput" onchange="handleFile(event)">
+    <input type="file" accept="image/jpeg,image/png,image/webp" id="fileInput" onchange="handleFile(event)"/>
     <div class="upload-hint" id="hint">
       <i class="ti ti-cloud-upload"></i>
       <p>点击选择照片 或 拖拽到这里<br><span>JPG / PNG / WEBP</span>，建议清晰正面照</p>
     </div>
     <div id="previewWrap" style="display:none;width:100%">
-      <img id="previewImg" class="preview-img" src="" alt="预览" style="opacity:1">
+      <img id="previewImg" class="preview-img" src="" alt="预览" style="opacity:1"/>
       <p class="re-upload">点击可重新选择</p>
     </div>
   </div>
 
   <p class="lbl">选择转换风格</p>
-  <div class="styles-grid" id="stylesGrid"><div class="sc" id="sc0"><div class="emo">🧑</div><div class="sn">真人化</div><div class="sd">宠物变成人类</div></div><div class="sc" id="sc1"><div class="emo">🧌</div><div class="sn">浪浪山妖怪</div><div class="sd">山林小妖画风</div></div><div class="sc" id="sc2"><div class="emo">🎨</div><div class="sn">Q版漫画</div><div class="sd">圆润可爱风格</div></div><div class="sc" id="sc3"><div class="emo">🖋️</div><div class="sn">水墨写意</div><div class="sd">中式水墨画风</div></div><div class="sc" id="sc4"><div class="emo">🌸</div><div class="sn">吉卜力风</div><div class="sd">宫崎骏温暖风</div></div><div class="sc" id="sc5"><div class="emo">🎮</div><div class="sn">像素风</div><div class="sd">复古游戏风格</div></div></div>
+  <div class="styles-grid" id="stylesGrid"></div>
 
-  <button class="gen-btn" id="genBtn" onclick="generate()" disabled="disabled">请先上传照片并选择风格</button>
+  <button class="gen-btn" id="genBtn" onclick="generate()" disabled>请先上传照片并选择风格</button>
 
   <p class="lbl">生成结果</p>
   <div class="result-box" id="resultBox">
@@ -128,8 +127,7 @@ const STYLES=[
   {e:"🌸",n:"吉卜力风",d:"宫崎骏温暖风",idx:4},
   {e:"🎮",n:"像素风",d:"复古游戏风格",idx:5},
 ];
-
-let sel=null,imgB64=null,imgMime=null;
+let sel=null,imgB64=null;
 
 window.onload=()=>{
   const ak=localStorage.getItem('aliKey');
@@ -167,7 +165,6 @@ function toggleKey(inputId,iconId){
 
 function handleFile(e){
   const f=e.target.files[0];if(!f)return;
-  imgMime=f.type||'image/jpeg';
   const r=new FileReader();
   r.onload=ev=>{
     imgB64=ev.target.result.split(',')[1];
@@ -187,22 +184,13 @@ function updateBtn(){
   }
 }
 
-async function uploadToImgbb(b64,apiKey){
-  const form=new FormData();
-  form.append('image',b64);
-  const resp=await fetch('https://api.imgbb.com/1/upload?key='+apiKey,{method:'POST',body:form});
-  const data=await resp.json();
-  if(!data.success)throw new Error('图片上传失败：'+(data.error&&data.error.message||JSON.stringify(data)));
-  return data.data.url;
-}
-
 async function generate(){
   const aliKey=document.getElementById('aliKey').value.trim();
   const imgbbKey=document.getElementById('imgbbKey').value.trim();
   if(!aliKey){showErr('请填写阿里云百炼 API Key');return;}
   if(!imgbbKey){showErr('请填写 imgbb API Key');return;}
   if(!imgB64){showErr('请先上传照片');return;}
-  if(sel===null){showErr('请选择一个风格');return;}
+  if(sel===null){showErr('请选择风格');return;}
 
   const btn=document.getElementById('genBtn');
   btn.disabled=true;btn.textContent='处理中…';
@@ -210,53 +198,43 @@ async function generate(){
   const s=STYLES[sel];
 
   try{
-    // 第1步：上传图片到imgbb获取公网URL
+    // 第1步：上传图片
     box.innerHTML='<div class="dots"><span></span><span></span><span></span></div><div class="loading-txt">第 1 步：上传照片中…</div>';
-    const imageUrl=await uploadToImgbb(imgB64,imgbbKey);
-
-    // 第2步：提交通义万相风格重绘任务（使用正确的接口和参数）
-    box.innerHTML='<div class="dots"><span></span><span></span><span></span></div><div class="loading-txt">第 2 步：提交 AI 风格转换任务…</div>';
-    const submitResp=await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/image-generation/generation',{
+    const uploadResp=await fetch('/api/upload',{
       method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer '+aliKey,
-        'X-DashScope-Async':'enable'
-      },
-      body:JSON.stringify({
-        model:'wanx-style-repaint-v1',
-        input:{
-          image_url:imageUrl,
-          style_index:s.idx
-        }
-      })
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({image:imgB64,imgbbKey})
+    });
+    const uploadData=await uploadResp.json();
+    if(!uploadData.url)throw new Error(uploadData.error||'上传失败');
+    const imageUrl=uploadData.url;
+
+    // 第2步：提交生成任务
+    box.innerHTML='<div class="dots"><span></span><span></span><span></span></div><div class="loading-txt">第 2 步：提交 AI 风格转换任务…</div>';
+    const submitResp=await fetch('/api/generate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({aliKey,imageUrl,styleIndex:s.idx})
     });
     const submitData=await submitResp.json();
-    if(!submitResp.ok||!submitData.output||!submitData.output.task_id){
-      throw new Error('提交失败：'+(submitData.message||submitData.code||JSON.stringify(submitData)));
-    }
+    if(!submitData.output||!submitData.output.task_id)throw new Error(submitData.message||submitData.error||JSON.stringify(submitData));
+    const taskId=submitData.output.task_id;
 
     // 第3步：轮询结果
-    const taskId=submitData.output.task_id;
     box.innerHTML='<div class="dots"><span></span><span></span><span></span></div><div class="loading-txt">第 3 步：AI 正在施魔法…<br><span style="font-size:11px;color:#ccc">通常需要 30-60 秒，请耐心等待</span></div>';
-
     let resultUrl=null;
     for(let i=0;i<40;i++){
       await new Promise(r=>setTimeout(r,3000));
-      const poll=await fetch('https://dashscope.aliyuncs.com/api/v1/tasks/'+taskId,{
-        headers:{'Authorization':'Bearer '+aliKey}
+      const pollResp=await fetch('/api/generate',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({aliKey,taskId})
       });
-      const pd=await poll.json();
+      const pd=await pollResp.json();
       const st=pd.output&&pd.output.task_status;
-      if(st==='SUCCEEDED'){
-        resultUrl=pd.output.results&&pd.output.results[0]&&pd.output.results[0].url;
-        break;
-      }
-      if(st==='FAILED'){
-        throw new Error('生成失败：'+(pd.output&&pd.output.message||pd.message||'未知错误'));
-      }
+      if(st==='SUCCEEDED'){resultUrl=pd.output.results&&pd.output.results[0]&&pd.output.results[0].url;break;}
+      if(st==='FAILED')throw new Error('生成失败：'+(pd.output&&pd.output.message||'未知错误'));
     }
-
     if(!resultUrl)throw new Error('生成超时，请重试');
 
     box.innerHTML=`<div class="result-inner">
@@ -267,9 +245,7 @@ async function generate(){
         <button class="sm-btn" onclick="generate()"><i class="ti ti-refresh"></i>再生成一次</button>
       </div>
     </div>`;
-    btn.disabled=false;
-    btn.textContent='✨ 用「'+s.n+'」风格生成图像';
-
+    btn.disabled=false;btn.textContent='✨ 用「'+s.n+'」风格生成图像';
   }catch(err){
     showErr(err.message);
     btn.disabled=false;
@@ -280,10 +256,8 @@ async function generate(){
 function showErr(msg){
   document.getElementById('resultBox').innerHTML=`<div style="width:100%">
     <i class="ti ti-alert-circle" style="font-size:28px;color:#e74c3c;display:block;margin-bottom:8px"></i>
-    <div class="err-box">${msg}</div>
-  </div>`;
+    <div class="err-box">${msg}</div></div>`;
 }
 </script>
-
-
-</body></html>
+</body>
+</html>
