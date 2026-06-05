@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { aliKey, imageUrl, styleIndex, taskId } = req.body;
+    const { aliKey, imageUrl, prompt, taskId } = req.body;
     if (!aliKey) return res.status(400).json({ error: '缺少 API Key' });
 
     // 查询任务状态
@@ -18,10 +18,10 @@ export default async function handler(req, res) {
       return res.status(200).json(data);
     }
 
-    // 提交新任务
-    if (!imageUrl && styleIndex === undefined) return res.status(400).json({ error: '缺少参数' });
+    // 提交新任务：使用 wanx2.1-imageedit，支持自由文字描述
+    if (!imageUrl || !prompt) return res.status(400).json({ error: '缺少参数' });
 
-    const submitResp = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/image-generation/generation', {
+    const submitResp = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,8 +29,13 @@ export default async function handler(req, res) {
         'X-DashScope-Async': 'enable'
       },
       body: JSON.stringify({
-        model: 'wanx-style-repaint-v1',
-        input: { image_url: imageUrl, style_index: styleIndex }
+        model: 'wanx2.1-imageedit',
+        input: {
+          function: 'stylization_all',
+          prompt: prompt,
+          base_image_url: imageUrl
+        },
+        parameters: { n: 1 }
       })
     });
     const data = await submitResp.json();
