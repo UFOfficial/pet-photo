@@ -6,40 +6,57 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { aliKey, imageUrl, prompt, taskId } = req.body;
-    if (!aliKey) return res.status(400).json({ error: '缺少 API Key' });
+    const { aliKey, imageBase64, imageMime, prompt } = req.body;
+    if (!aliKey) return res.status(400).json({ error: '缺少阿里云百炼 API Key' });
+    if (!imageBase64 || !prompt) return res.status(400).json({ error: '缺少参数' });
 
-    // 查询任务状态
-    if (taskId) {
-      const poll = await fetch(`https://dashscope.aliyuncs.com/api/v1/tasks/${taskId}`, {
-        headers: { 'Authorization': 'Bearer ' + aliKey }
-      });
-      const data = await poll.json();
-      return res.status(200).json(data);
-    }
+    const dataUrl = `data:${imageMime || 'image/jpeg'};base64,${imageBase64}`;
 
-    // 提交新任务
-    if (!imageUrl || !prompt) return res.status(400).json({ error: '缺少参数' });
-
-    const submitResp = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis', {
+    const resp = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + aliKey,
-        'X-DashScope-Async': 'enable'
+        'Authorization': 'Bearer ' + aliKey
       },
       body: JSON.stringify({
-        model: 'wanx2.1-imageedit',
+        model: 'wan2.7-image',
         input: {
-          function: 'stylization_all',
-          prompt: prompt,
-          base_image_url: imageUrl
+          messages: [
+            {
+              role: 'user',
+              content: [
+                { text: prompt },
+                { image: dataUrl }
+              ]
+            }
+          ]
         },
-        parameters: { n: 1, strength: 0.8 }
+        parameters: {
+          size: '1K',
+          n: 1,
+          watermark: false
+        }
       })
     });
-    const data = await submitResp.json();
-    res.status(submitResp.status).json(data);
+
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      return res.status(resp.status).json({ error: data.message || data.code || JSON.stringify(data) });
+    }
+
+    // 提取图片URL：返回结构在 output.choices[0].message.content 中
+    let imageUrl = null;
+    try {
+      const content = data.output.choices[0].message.content;
+      for (const item of content) {
+        if (item.image) { imageUrl = item.image; break; }
+      }
+    } catch (e) {}
+
+    if (!imageUrl) return res.status(500).json({ error: '未返回图片，原始返回：' + JSON.stringify(data) });
+
+    res.status(200).json({ url: imageUrl });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
