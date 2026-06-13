@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       return res.status(200).json(data);
     }
 
-    // 提交新任务：使用 wanx2.1-imageedit，支持自由文字描述
+    // 提交新任务
     if (!imageUrl || !prompt) return res.status(400).json({ error: '缺少参数' });
 
     const submitResp = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis', {
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
           prompt: prompt,
           base_image_url: imageUrl
         },
-        parameters: { n: 1 }
+        parameters: { n: 1, strength: 0.8 }
       })
     });
     const data = await submitResp.json();
