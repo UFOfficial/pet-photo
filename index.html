@@ -38,10 +38,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 .sc .emo{font-size:26px;margin-bottom:6px}
 .sc .sn{font-size:13px;font-weight:600;color:#333;margin-bottom:3px}
 .sc .sd{font-size:11px;color:#aaa;line-height:1.4}
-.custom-prompt-wrap{margin-bottom:1.25rem}
-.custom-prompt-wrap textarea{width:100%;border:1.5px solid #e8e8e8;border-radius:12px;padding:10px 14px;font-size:13px;color:#333;background:#fafafa;resize:vertical;min-height:72px;font-family:inherit;line-height:1.6;transition:border-color .2s}
-.custom-prompt-wrap textarea:focus{outline:none;border-color:#7F77DD;background:#fff}
-.prompt-tip{font-size:12px;color:#bbb;margin-top:6px}
+.prompt-wrap{margin-bottom:1.25rem}
+.prompt-wrap textarea{width:100%;border:1.5px solid #e8e8e8;border-radius:12px;padding:10px 14px;font-size:13px;color:#333;background:#fafafa;resize:vertical;min-height:64px;font-family:inherit;line-height:1.6;transition:border-color .2s}
+.prompt-wrap textarea:focus{outline:none;border-color:#7F77DD;background:#fff}
+.prompt-rule{font-size:12px;color:#bbb;margin-top:6px;line-height:1.6;background:#fffbf0;border-radius:8px;padding:8px 12px;border:1px solid #ffe8a0}
+.prompt-rule b{color:#b07800}
 .gen-btn{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#7F77DD,#534AB7);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s;margin-bottom:1.25rem}
 .gen-btn:hover:not(:disabled){opacity:.9}
 .gen-btn:active:not(:disabled){transform:scale(.98)}
@@ -75,7 +76,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 
   <div class="notice">
     <i class="ti ti-sparkles"></i>
-    升级版！使用通义万相 2.1 图像编辑模型，支持自定义描述，效果更精准。
+    使用通义万相 2.1 图像编辑模型，支持多种艺术风格转换。
   </div>
 
   <div class="card">
@@ -111,9 +112,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
   <div class="styles-grid" id="stylesGrid"></div>
 
   <p class="lbl">风格描述（可修改）</p>
-  <div class="custom-prompt-wrap">
-    <textarea id="promptBox" placeholder="选择风格后这里会自动填入描述，你也可以自己修改或直接输入想要的效果"></textarea>
-    <p class="prompt-tip">💡 描述越具体，效果越好。比如加上"保留狗狗的棕色毛发"、"表情要可爱"等细节。</p>
+  <div class="prompt-wrap">
+    <textarea id="promptBox" placeholder="选择风格后自动填入，格式必须是：转换成xx风格"></textarea>
+    <div class="prompt-rule">
+      ⚠️ <b>重要：</b>描述格式必须是「<b>转换成xx风格</b>」，例如"转换成像素游戏风格"、"转换成水墨画风格"。写其他指令（替换背景、改变动作等）AI 会忽略。
+    </div>
   </div>
 
   <button class="gen-btn" id="genBtn" onclick="generate()" disabled>请先上传照片并选择风格</button>
@@ -129,12 +132,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hira
 
 <script>
 const STYLES=[
-  {e:"🧑",n:"真人化",d:"变成人类",p:"将图中的宠物转化为一个真实的人类角色，根据宠物的毛色和神态设计人物的发色、肤色和气质，高清写实摄影风格，保留宠物的眼神特征"},
-  {e:"🧌",n:"浪浪山妖怪",d:"山林小妖画风",p:"将图中的宠物转化为浪浪山风格的山林小妖怪角色，保留宠物的颜色特征和神态，日式手绘动画风格，温暖柔和色调，精灵感"},
-  {e:"🎨",n:"Q版漫画",d:"圆润可爱风格",p:"将图中的宠物转化为Q版卡通漫画角色，保留宠物的颜色和表情特征，大眼睛圆脑袋，日系可爱漫画风格，线条圆润，色彩鲜艳"},
-  {e:"🖋️",n:"水墨写意",d:"中式水墨画风",p:"将图中的宠物转化为中国传统水墨画风格，保留宠物的姿态和神韵，写意笔触，墨色浓淡有致，留白意境，古典雅致"},
-  {e:"🌸",n:"吉卜力风",d:"宫崎骏温暖风",p:"将图中的宠物转化为宫崎骏吉卜力工作室动画风格角色，保留宠物的颜色和神态，手绘质感，温暖柔和的色彩，充满生命力"},
-  {e:"🎮",n:"像素风",d:"复古游戏风格",p:"将图中的宠物转化为复古像素艺术风格，保留宠物的颜色特征，16位游戏角色风格，像素颗粒感清晰，色块鲜明可爱"},
+  {e:"🧑",n:"真人化",d:"变成人类",p:"转换成写实人物摄影风格"},
+  {e:"🧌",n:"浪浪山妖怪",d:"山林小妖画风",p:"转换成日本山林妖怪插画风格"},
+  {e:"🎨",n:"Q版漫画",d:"圆润可爱风格",p:"转换成Q版卡通漫画风格"},
+  {e:"🖋️",n:"水墨写意",d:"中式水墨画风",p:"转换成中国传统水墨画风格"},
+  {e:"🌸",n:"吉卜力风",d:"宫崎骏温暖风",p:"转换成宫崎骏吉卜力动画风格"},
+  {e:"🎮",n:"像素风",d:"复古游戏风格",p:"转换成复古像素游戏风格"},
 ];
 
 let sel=null,imgB64=null;
